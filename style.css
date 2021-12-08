@@ -37,10 +37,13 @@ body {
 }
 
 .target {
-    height: 20%;
-    width: 20%;
+    width: 25%;
+    aspect-ratio: 1;
     border-radius: 50%;
     background-color: var(--grey0);
+}
+.target.active {
+    background-color: var(--green1);
 }
 
 .container {
@@ -86,6 +89,14 @@ body {
     display: block;
     justify-content: center;
     padding: 1vh;
+}
+
+#dvnl-logo {
+    height: 7vh;
+}
+
+#head-space {
+    width: 1.5vw;
 }
 
 #tar-one {

@@ -15,12 +15,14 @@
 <body>
   <div class="container">
       <div class="header panel">
+          <img src="logo_sol.png" alt="DVNL logo" id="dvnl-logo">
+          <div id="head-space"></div>
           Developmental Visuomotor Neuroscience Lab
       </div>
       <div class="sidebar panel"></div>
       <div class="main panel">
-        <div id="tar-one" class="target"></div>
-        <div id="tar-two" class="target"></div>
+        <button id="tar-one" class="target active"></button>
+        <button id="tar-two" class="target"></button>
       </div>
       <div class="record panel"></div>
       <div class="options panel">
@@ -28,11 +30,13 @@
         <div class="slidecontainer">
           <input type="range" min="1" max="100" value="50" class="slider" id="tar-rad">
         </div>
+        <div id="lbl-rad"></div>
         <div>Target Distance</div>
         <div class="slidecontainer">
           <input type="range" min="1" max="100" value="50" class="slider" id="tar-dist">
         </div>
-        <div id="output"></div>
+        <div id="lbl-dist"></div>
+        <div id="lbl-ID">Index of Difficulty: --</div>
       </div>
   </div>
 </body>
