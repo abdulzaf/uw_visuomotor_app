@@ -5,6 +5,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
   <script lang="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.4.2.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
@@ -26,7 +27,8 @@
         <button id="tar-one" class="target active"></button>
         <button id="tar-two" class="target"></button>
       </div>
-      <div class="record panel"></div>
+      <div class="record panel">
+      </div>
       <div class="options panel">
         <div>Target Radius</div>
         <div class="slidecontainer">
@@ -39,6 +41,9 @@
         </div>
         <div id="lbl-dist"></div>
         <div id="lbl-ID">Index of Difficulty: --</div>
+      </div>
+      <div class="output panel">
+        <div id="plot"></div>
       </div>
   </div>
 </body>
