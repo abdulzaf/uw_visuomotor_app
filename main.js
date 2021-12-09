@@ -6,18 +6,26 @@ var lblDist = document.getElementById("lbl-dist");
 var lblRad = document.getElementById("lbl-rad");
 var lblID = document.getElementById("lbl-ID");
 var pltData = document.getElementById('plot');
+var btnRec = document.getElementById('btn-record');
+var txtTap = document.getElementById('tap-count');
 
 var tOneX = tarOne.offsetLeft;
 var tTwoX = tarTwo.offsetLeft + Math.round(tRad/2);
 var tRad = tarOne.offsetWidth;
 var tDist = tarTwo.offsetLeft - tarOne.offsetLeft
 var fittsID = Math.log(2);
-var rTime = [0,0];
-var tActive = 1;
+var rTime = -1;
+var tActive = -1;
+var nTaps = -1;
+var toggleRec = false;
+var vw = window.innerWidth;
+var vh = window.innerHeight;
 
 var struct_data = {
   "tar_width": [],
-  "tar_dist": []
+  "tar_dist": [],
+  "RT": [],
+  "ID": []
 }
 
 // Init
@@ -61,24 +69,50 @@ sliderDist.oninput = function() {
 tarOne.onclick = function() {
   if (tActive==1) {
     toggleTarget();
-    struct_data.tar_dist.push(tDist);
-    struct_data.tar_width.push(tRad);
+    responseTime();
     plotData();
   }
 }
 tarTwo.onclick = function() {
   if (tActive==2) {
     toggleTarget();
-    struct_data.tar_dist.push(tDist);
-    struct_data.tar_width.push(tRad);
+    responseTime();
     plotData();
   }
+}
+
+btnRec.onclick = function() {
+  toggleRec = !toggleRec;
+
+  if (toggleRec) {
+    btnRec.innerHTML = "STOP";
+    tActive = 2;
+    btnRec.classList.add("active");
+    toggleTarget();
+  } else {
+    btnRec.innerHTML = "START";
+    tActive = -1;
+    rTime = -1;
+    nTaps = -1;
+    tarOne.classList.remove("active");
+    tarTwo.classList.remove("active");
+    btnRec.classList.remove("active");
+  }
+  displayNTaps();
 }
 
 //#region UI SET
 window.onload = function() {
   tarTwo.style.left = tOneX + tRad + 'px';
+  vw = window.innerWidth;
+  vh = window.innerHeight;
+  plotData();
 }
+window.onresize = function() {
+  vw = window.innerWidth;
+  vh = window.innerHeight;
+  plotData();
+};
 
 function toggleTarget() {
   if (tActive==1) {
@@ -86,11 +120,22 @@ function toggleTarget() {
 
     tarOne.classList.remove("active");
     tarTwo.classList.add("active");
-  } else {
+  } else if (tActive==2) {
     tActive = 1;
 
     tarTwo.classList.remove("active");
     tarOne.classList.add("active");
+  }
+
+  nTaps++;
+  displayNTaps();
+}
+
+function displayNTaps() {
+  if (nTaps==-1) {
+    txtTap.innerHTML = "# of taps: -";
+  } else {
+    txtTap.innerHTML = "# of taps: " + nTaps;
   }
 }
 
@@ -101,14 +146,30 @@ function updateParams() {
   fittsID = Math.log(2);
 }
 
+function responseTime() {
+  if (rTime==-1) {
+    rTime = Date.now();
+  } else {
+    struct_data.RT.push(Date.now() - rTime);
+    struct_data.ID.push(fittsID);
+    struct_data.tar_dist.push(tDist);
+    struct_data.tar_width.push(tRad);
+
+    rTime = -1;
+  }
+}
+
 function plotData() {
   var data = [{
-      x: struct_data.tar_dist,
-      y: struct_data.tar_width,
+      x: struct_data.ID,
+      y: struct_data.RT,
       mode: 'markers',
       type: 'scatter'
       }]
   var layout = {
+      autosize: false,
+      height: Math.round(0.6*vh),
+      width: Math.round(0.7*vw),
       xaxis: {
         title: "Target Distance",
         titlefont: {

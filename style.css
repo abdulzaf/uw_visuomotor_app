@@ -18,7 +18,7 @@
     --blue2: #2767b0;
     --blue3: #18A0FB;
     --green1: #03ce85;
-    --green2: #157c74;
+    --green2: #07ad6e;
     --purple1: #9c27b0;
     --purple2: #5727b0;
     --slate1: #95a6bf;
@@ -44,6 +44,22 @@ body {
 }
 .target.active {
     background-color: var(--green1);
+}
+
+.btn {
+    font-size: 4vh;
+    font-weight: 600;
+    color: var(--grey0);
+    width: 90%;
+    background-color: var(--green1);
+    transition: 0.1s linear all;
+    border-radius: 5%;
+    box-shadow: inset 0 0 10px #fff;
+}
+.btn.active {
+    color: var(--grey6);
+    background-color: var(--red1);
+    font-weight: normal;
 }
 
 .container {
@@ -97,6 +113,10 @@ body {
     
 .record {
     grid-area: record;
+    padding-top: 10%;
+    padding-bottom: 10%;
+    display: flex;
+    justify-content: center;
 }
   
 .options {
@@ -108,6 +128,9 @@ body {
 
 .output {
     grid-area: output;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #dvnl-logo {
@@ -125,4 +148,21 @@ body {
 #tar-two {
     position: absolute;
     transition: 0.1s linear all;
+}
+
+#tap-count {
+    position: absolute;
+    top: 5%;
+    width: 100%;
+    font-size: 5vh;
+    font-weight: lighter;
+    text-align: center;
+}
+
+#lbl-ID {
+    width: 100%;
+    font-size: 2vh;
+    font-weight: 600;
+    text-align: center;
+    padding-top: 5%;
 }
