@@ -143,11 +143,11 @@ body {
 
 #tar-one {
     position: absolute;
-    transition: 0.1s linear all;
+    transition: 0.05s linear all;
 }
 #tar-two {
     position: absolute;
-    transition: 0.1s linear all;
+    transition: 0.05s linear all;
 }
 
 #tap-count {

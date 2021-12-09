@@ -12,14 +12,16 @@ var txtTap = document.getElementById('tap-count');
 var tOneX = tarOne.offsetLeft;
 var tTwoX = tarTwo.offsetLeft + Math.round(tRad/2);
 var tRad = tarOne.offsetWidth;
-var tDist = tarTwo.offsetLeft - tarOne.offsetLeft
+var tDist = tarOne.offsetWidth;
+var tCen = [0,0];
 var fittsID = Math.log(2);
 var rTime = -1;
 var tActive = -1;
-var nTaps = -1;
+var nTaps = -2;
 var toggleRec = false;
 var vw = window.innerWidth;
 var vh = window.innerHeight;
+var pwidth = tarOne.parentElement.offsetWidth;
 
 var struct_data = {
   "tar_width": [],
@@ -28,43 +30,47 @@ var struct_data = {
   "ID": []
 }
 
-// Init
-sliderDist.value = 0;
-lblRad.innerHTML = tRad;
-lblDist.innerHTML = tRad;
-lblID.innerHTML = "Index of Difficulty: " + Math.round(100*fittsID)/100;
-
 // Update the current slider value (each time you drag the slider handle)
 sliderRad.oninput = function() {
-  tRad = (Math.round(this.value /2) /100) * tarTwo.parentElement.offsetWidth;
-  tDist = tRad;
-  fittsID = Math.log(2*tDist/tRad);
+  var testVal = (this.value/200) * pwidth;
 
-  sliderDist.value = 0;
-  tarOne.style.width = tRad + 'px';
-  tarTwo.style.width = tRad + 'px';
-  tarTwo.style.left = tOneX + tRad + 'px';
+  if (testVal < tDist && (testVal + tDist) < pwidth) {
+    tRad = (Math.round(this.value /2) /100) * pwidth;
+    fittsID = Math.log(2*tDist/tRad);
 
-  // Update Labels
-  lblRad.innerHTML = tarOne.offsetWidth;
-  lblDist.innerHTML = tarTwo.offsetLeft - tarOne.offsetLeft;
-  lblID.innerHTML = "Index of Difficulty: " + Math.round(100*fittsID)/100;
+    tarOne.style.width = tRad + 'px';
+    tarTwo.style.width = tRad + 'px';
+
+    tarOne.style.left = Math.round(tCen[0] * pwidth) - Math.round(tRad/2) + 'px';
+    tarTwo.style.left = Math.round(tCen[1] * pwidth) - Math.round(tRad/2) + 'px';
+
+    // Update Labels
+    lblRad.innerHTML = Math.round(tarOne.offsetWidth/2);
+    lblDist.innerHTML = tarTwo.offsetLeft - tarOne.offsetLeft;
+    lblID.innerHTML = "Index of Difficulty: " + Math.round(100*fittsID)/100;
+  }
 }
 
 sliderDist.oninput = function() {
-  // Update Vals
-  tDist = tRad + (tarTwo.parentElement.offsetWidth - 2*tRad) * (this.value/100)
-  fittsID = Math.log(2*tDist/tRad);
+  var testVal = (this.value/100) * pwidth;
 
-  // Update Interface
-  tarTwo.style.left = tOneX
-    + Math.round(tDist)
-    + 'px';
+  if (tRad < testVal && (testVal + tRad) < pwidth) {
+    var perHalf = 0.5 * (this.value/100);
+    tCen = [0.5 - perHalf, 0.5 + perHalf];
 
-  // Update Labels
-  lblDist.innerHTML = Math.round(tDist);
-  lblID.innerHTML = "Index of Difficulty: " + Math.round(100*fittsID)/100;
+    // Update Vals
+    tDist = Math.round((tCen[1] - tCen[0]) * pwidth);
+    fittsID = Math.log(2*tDist/tRad);
+
+    // Update Interface
+    tarOne.style.left = Math.round(tCen[0] * pwidth) - Math.round(tRad/2) + 'px';
+    tarTwo.style.left = Math.round(tCen[1] * pwidth) - Math.round(tRad/2) + 'px';
+
+    // Update Labels
+    lblDist.innerHTML = Math.round(tDist);
+    lblID.innerHTML = "Index of Difficulty: " + Math.round(100*fittsID)/100;
   }
+}
 
 tarOne.onclick = function() {
   if (tActive==1) {
@@ -93,7 +99,7 @@ btnRec.onclick = function() {
     btnRec.innerHTML = "START";
     tActive = -1;
     rTime = -1;
-    nTaps = -1;
+    nTaps = -2;
     tarOne.classList.remove("active");
     tarTwo.classList.remove("active");
     btnRec.classList.remove("active");
@@ -103,14 +109,37 @@ btnRec.onclick = function() {
 
 //#region UI SET
 window.onload = function() {
-  tarTwo.style.left = tOneX + tRad + 'px';
+  tCen = [.25, .75];
   vw = window.innerWidth;
   vh = window.innerHeight;
+  pwidth = tarOne.parentElement.offsetWidth;
+  tRad = tarOne.offsetWidth;
+  tDist = Math.round((tCen[1] - tCen[0]) * pwidth);
+  fittsID = Math.log(2*tDist/tRad);
+
+  tarOne.style.left = Math.round(tCen[0] * pwidth) - Math.round(tRad/2) + 'px';
+  tarTwo.style.left = Math.round(tCen[1] * pwidth) - Math.round(tRad/2) + 'px';
+
+  lblRad.innerHTML = Math.round(tarOne.offsetWidth/2);
+  lblDist.innerHTML = tDist;
+  lblID.innerHTML = "Index of Difficulty: " + Math.round(100*fittsID)/100;
+
   plotData();
 }
 window.onresize = function() {
   vw = window.innerWidth;
   vh = window.innerHeight;
+  pwidth = tarOne.parentElement.offsetWidth;
+  tRad = tarOne.offsetWidth;
+  tDist = Math.round((tCen[1] - tCen[0]) * pwidth);
+  fittsID = Math.log(2*tDist/tRad);
+
+  tarOne.style.left = Math.round(tCen[0] * pwidth) - Math.round(tRad/2) + 'px';
+  tarTwo.style.left = Math.round(tCen[1] * pwidth) - Math.round(tRad/2) + 'px';
+
+  lblRad.innerHTML = Math.round(tarOne.offsetWidth/2);
+  lblDist.innerHTML = tDist;
+  lblID.innerHTML = "Index of Difficulty: " + Math.round(100*fittsID)/100;
   plotData();
 };
 
@@ -132,7 +161,7 @@ function toggleTarget() {
 }
 
 function displayNTaps() {
-  if (nTaps==-1) {
+  if (nTaps<1) {
     txtTap.innerHTML = "# of taps: -";
   } else {
     txtTap.innerHTML = "# of taps: " + nTaps;
@@ -164,7 +193,15 @@ function plotData() {
       x: struct_data.ID,
       y: struct_data.RT,
       mode: 'markers',
-      type: 'scatter'
+      type: 'scatter',
+      marker: {
+        color: 'rgba(214, 40, 40,0.75)',
+        size: Math.round(0.01*vw),
+        line: {
+          color: 'rgb(72, 86, 103)',
+          width: 2
+        }
+      }
       }]
   var layout = {
       autosize: false,
